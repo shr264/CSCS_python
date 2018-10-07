@@ -24,7 +24,7 @@ def _Tj(j,
         j: index at which to apply function
         A: a p x p matrix
         x: a p x 1 vector
-        l: real number 
+        l: real number
     output:
         an updated real value
     """
@@ -49,7 +49,7 @@ def _hk(k,
         A,
         l,
         maxitr=100,
-        tol=1e-5, 
+        tol=1e-5,
         debug = False):
     """
     look at the algorithm in the paper for more details
@@ -57,7 +57,7 @@ def _hk(k,
         k: index at which to apply function
         A: a p x p matrix
         l: real value to threshold by
-        maxitr: maximum number of iterations to run 
+        maxitr: maximum number of iterations to run
         tol: error tolerance
         debug: print outputs used in debugging
     output:
@@ -89,15 +89,15 @@ def _hk(k,
         xold = xnew
     return(xnew)
 
-def CSCS_fit(Y, 
-         l, 
-         L=None, 
-         maxitr=100, 
-         tol=1e-4, 
-         warmstart=False, 
+def CSCS_fit(Y,
+         l,
+         L=None,
+         maxitr=100,
+         tol=1e-4,
+         warmstart=False,
          debug = False):
     """
-    implements the CSCS algorithm from 
+    implements the CSCS algorithm from
     A convex framework for high-dimensional sparse Cholesky based covariance estimation
     by
     Kshitij Khare, Sang Oh, Syed Rahman and Bala Rajaratnam
@@ -123,23 +123,23 @@ def CSCS_fit(Y,
         if(debug):
             print('Variable: {}'.format(i+1))
         L[i,0:i] = _hk(i,S[0:i, 0:i], l, maxitr, tol, debug = debug)
-    A = (L>0)*1.0    
+    A = (L!=0)*1.0    
     G=nx.from_numpy_matrix(A.T, create_using=nx.DiGraph())
     return(L, A, G)
 
 class CSCS:
     def __init__(self,
-                 Y = None, 
-                 l = None, 
+                 Y = None,
+                 l = None,
                  L=None):
         self.Y = Y
         self.l = l
         self.L = L
-    
+
     def fit(self,
-            maxitr=100, 
-            tol=1e-4, 
-            warmstart=False, 
+            maxitr=100,
+            tol=1e-4,
+            warmstart=False,
             debug = False):
         if(self.Y is None):
             print('Please enter a data matrix')
@@ -150,9 +150,7 @@ class CSCS:
         return(CSCS_fit(self.Y,
                        self.l,
                        self.L,
-                       maxitr=maxitr, 
-                       tol=tol, 
-                       warmstart=warmstart, 
+                       maxitr=maxitr,
+                       tol=tol,
+                       warmstart=warmstart,
                        debug = debug))
-        
-    

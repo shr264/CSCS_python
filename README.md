@@ -6,7 +6,7 @@ This implements the CSCS algorithm for covariance and DAG estimation from [A con
 
 The program consists of the following scripts
 * data_generate.py: used to generate random multivariate data accoriding to a graph
-* CSCS.py: contains the main functions and class for CSCS
+* CSCS.py: contains the main functions and class for CSCS to estimate DAG and the cholesky parameter for the covariance matrix
 * main.py: runs the program to generate the DAG
 
 ## Notebooks

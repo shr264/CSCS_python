@@ -1,30 +1,35 @@
 import numpy as np
 import networkx as nx
 import scipy
+from sys import exit
 
-def generate_random_L(p = 10, 
-                      a = 0.3, 
-                      b = 0.7, 
-                      diag_a = 2, 
-                      diag_b = 5, 
-                      plot = False):
+def generate_random_L(p = 10,
+                      a = 0.3,
+                      b = 0.7,
+                      diag_a = 2,
+                      diag_b = 5,
+                      plot = False,
+                      G = nx.gn_graph(p)):
     """
-    randomly generates a lower triangular matrix based on a growing network graph 
+    randomly generates a lower triangular matrix based on a growing network graph
     Input:
         p: number of nodes
         a: lower bound for off-diagonal
         b: upper bound for off_diagonal
         diag_a: lower bound for diagonal
         diag_b: upper bound for diagonal
+        G: Directed graph
     Output:
         L: Lower triangular matrix
         A: Adjacency matrix
-        G: Directed growing network graph
+        G: Directed graph
     """
-    G = nx.gn_graph(p)
+    if(~nx.is_directed(G)):
+        print('G is not directed')
+        exit(1)
     ### need to relabel vertices to agree with CSCS
     mapping=dict(zip(G.nodes(),list(range(p-1,-1,-1))))
-    G=nx.relabel_nodes(G,mapping) 
+    G=nx.relabel_nodes(G,mapping)
     if(plot):
         import matplotlib.pyplot as plt
         nx.draw_shell(G, with_labels=True, font_weight='bold')
@@ -33,12 +38,12 @@ def generate_random_L(p = 10,
     np.fill_diagonal(L,np.random.uniform(diag_a,diag_b,p))
     return(L,A,G)
 
-def generate_random_MVN_data(n = 50, 
-                             p = 10, 
-                             a = 0.3, 
-                             b = 0.7, 
-                             diag_a = 2, 
-                             diag_b = 5, 
+def generate_random_MVN_data(n = 50,
+                             p = 10,
+                             a = 0.3,
+                             b = 0.7,
+                             diag_a = 2,
+                             diag_b = 5,
                              plot = False):
     """generates random multivariate normal data corresponding to growing network graph
     Input:

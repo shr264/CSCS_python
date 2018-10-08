@@ -1,6 +1,7 @@
 import numpy as np
 import networkx as nx
 import scipy
+from sys import exit
 
 def generate_random_L(p = 10,
                       a = 0.3,
@@ -23,6 +24,9 @@ def generate_random_L(p = 10,
         A: Adjacency matrix
         G: Directed graph
     """
+    if(~nx.is_directed(G)):
+        print('G is not directed')
+        exit(1)
     ### need to relabel vertices to agree with CSCS
     mapping=dict(zip(G.nodes(),list(range(p-1,-1,-1))))
     G=nx.relabel_nodes(G,mapping)

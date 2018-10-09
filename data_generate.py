@@ -9,7 +9,7 @@ def generate_random_L(p = 10,
                       diag_a = 2,
                       diag_b = 5,
                       plot = False,
-                      G = nx.gn_graph(p)):
+                      G = None):
     """
     randomly generates a lower triangular matrix based on a growing network graph
     Input:
@@ -24,6 +24,8 @@ def generate_random_L(p = 10,
         A: Adjacency matrix
         G: Directed graph
     """
+    if(G is None):
+        G = nx.gn_graph(p)
     if(~nx.is_directed(G)):
         print('G is not directed')
         exit(1)

@@ -26,7 +26,7 @@ def generate_random_L(p = 10,
     """
     if(G is None):
         G = nx.gn_graph(p)
-    if(~nx.is_directed(G)):
+    if(nx.is_directed(G) is False):
         print('G is not directed')
         exit(1)
     ### need to relabel vertices to agree with CSCS

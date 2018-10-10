@@ -224,11 +224,10 @@ class CSCS:
     def __init__(self,
                  Y = None,
                  l = None,
-                 fit_method = 'parallel'):
+                 num_workers = 1):
         self.Y = Y
         self.l = l
-        self.fit_method = fit_method
-
+        self.num_workers  = num_workers
 
     def fit(self,
             maxitr=100,
@@ -241,14 +240,15 @@ class CSCS:
         if(self.l is None):
             print('Please enter a thresholding value')
             exit(1)
-        if(self.fit_method == 'parallel'):
+        if(self.num_workers>1):
             return(CSCS_par_fit(self.Y,
                        self.l,
                        maxitr=maxitr,
                        tol=tol,
                        warmstart=warmstart,
-                       debug = debug))
-        elif(self.fit_method == 'serial'):
+                       debug = debug,
+                       num_workers = self.num_workers))
+        elif(self.num_workers==1):
             return(CSCS_fit(self.Y,
                        self.l,
                        maxitr=maxitr,
@@ -256,5 +256,5 @@ class CSCS:
                        warmstart=warmstart,
                        debug = debug))
         else:
-            print('Incorrect fit method')
+            print('Incorrect num_workers! Please enter a positive integer')
             exit(1)

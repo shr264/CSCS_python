@@ -35,6 +35,7 @@ def generate_random_L(p = 10,
     if(plot):
         import matplotlib.pyplot as plt
         nx.draw_shell(G, with_labels=True, font_weight='bold')
+        plt.show()
     A = nx.adjacency_matrix(G).todense()
     L = np.multiply(A,((b - a) * np.random.random_sample(size = p*p) + a).reshape(p,p))
     np.fill_diagonal(L,np.random.uniform(diag_a,diag_b,p))

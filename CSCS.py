@@ -71,9 +71,9 @@ def _hk(k,
     while(converged is False):
         if(debug):
             print('iter: {}'.format(r))
-        for j in range(k-2):
+        for j in range(k):
             xnew[j] = _Tj(j,A,xnew,l)
-        xnew[k-1] = _Tk(k-1,A,xnew)
+        xnew[k] = _Tk(k,A,xnew)
         if(max(abs(xnew - xold))<tol):
             if(debug):
                 print('Tolerance condition met')
@@ -122,8 +122,8 @@ def CSCS_fit(Y,
     for i in range(1,p):
         if(debug):
             print('Variable: {}'.format(i+1))
-        L[i,0:i] = _hk(i,S[0:i, 0:i], l, maxitr, tol, debug = debug)
-    A = (L!=0)*1.0    
+        L[i,0:(i+1)] = _hk(i,S[0:(i+1), 0:(i+1)], l, maxitr, tol, debug = debug)
+    A = (L!=0)*1.0
     G=nx.from_numpy_matrix(A.T, create_using=nx.DiGraph())
     return(L, A, G)
 

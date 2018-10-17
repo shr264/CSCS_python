@@ -231,7 +231,7 @@ def _hk_par(k,
         xold = xnew
     return(xnew)
 
-@jit(nopython=False)
+@jit(nopython=True)
 def CSCS_numba_fit(Y,
          l,
          maxitr=100,
@@ -254,19 +254,34 @@ def CSCS_numba_fit(Y,
     #### outputs
     ## L: lower triangular matrix of cholesky factor computed with CSCS algorithm
     ## A: adjacency matrix for graph
-    ## D: directed graph
     """
     n, p = Y.shape
-    L = np.identity(p)
+    L = Lold = np.identity(p)
     S = (Y.T@Y)/n
     L[0,0] = 1/np.sqrt(S[0,0])
-    for i in range(1,p):
-        #if(debug):
-        #    print('Variable: {}'.format(i+1))
-        L[i,0:(i+1)] = _hk_numba(i,S[0:(i+1), 0:(i+1)], l, maxitr, tol, debug = debug)
-    A = (L!=0)*1.0
-    G=nx.from_numpy_matrix(A.T, create_using=nx.DiGraph())
-    return(L, A, G)
+    r = 1
+    converged = False
+    while(converged is False):
+        for i in range(1,p):
+            for j in range(i+1):
+                temp_ij = 0
+                for k in range(i+1):
+                    if(k!=j):
+                        temp_ij += S[k,j]*L[k,j]
+                L[i,j] = _soft_threshold_numba(temp_ij,l)/(2*S[j,j])
+            temp_ii = 0
+            for k in range(i+1):
+                if(k!=i):
+                    temp_ii += S[k,j]*L[k,j]
+            L[i,i] = (-temp_ii+np.sqrt(np.square(temp_ii)+4*S[i,i]))/(2*S[i,i])
+        if(np.amax(np.absolute(np.subtract(L,Lold)))<tol):
+            converged = True
+        elif(r>maxitr):
+            converged = True
+        else:
+            r += 1
+        Lold = L
+    return(L)
 
 def CSCS_fit(Y,
          l,
